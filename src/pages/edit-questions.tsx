@@ -2,18 +2,22 @@ import { ReactElement, useState } from 'react';
 import Input from '../components/Input/';
 import { useForm } from 'react-hook-form'
 import nookies from 'nookies'
-import { FiTrash, FiEdit2 } from 'react-icons/fi'
+import { FiTrash, FiEdit2, FiCheck } from 'react-icons/fi'
+import { v4 as uuidv4 } from 'uuid';
 
 import Button from '../components/Button';
+import EditableInput from '../components/EditableInput';
 
-import * as Styles from '../styles/Pages/Create'
+import * as Styles from '../styles/Pages/EditQuestions'
 
 interface IQuestionsProps {
-  id: number
+  id: string
   question: string
 }
 
 const EditQuestions = (): ReactElement => {
+  const [isUserEditingQuestion, setIsUserEditingQuestion] = useState(false)
+  const [questionBeingEdited, setQuestionBeingEdited] = useState<IQuestionsProps>({} as IQuestionsProps)
   const [questions, setQuestions] = useState<IQuestionsProps[]>(() => {
     const { questions: questionsFromCookies } = nookies.get()
 
@@ -24,15 +28,15 @@ const EditQuestions = (): ReactElement => {
     return []
   })
 
-  const { register, handleSubmit, getValues, reset } = useForm()
+  const { register, handleSubmit, getValues, reset, setValue } = useForm()
 
-  const handleSubmitForm = () => {
+  const handleCreateQuestion = () => {
     const newQuestion = getValues('question')
 
     const updatedQuestions = [
       ...questions,
       {
-        id: questions.length + 1,
+        id: uuidv4(),
         question: newQuestion
       }
     ]
@@ -46,16 +50,50 @@ const EditQuestions = (): ReactElement => {
     reset()
   }
 
+  const handleDeleteQuestion = (questionId: string) => {
+    const filteredQuestions = questions.filter(question => questionId !== question.id)
+
+    setQuestions(filteredQuestions)
+    nookies.set(undefined, 'questions', JSON.stringify(filteredQuestions))
+  }
+
+  const handleEditQuestion = (question: IQuestionsProps) => {
+    setQuestionBeingEdited(question)
+    setIsUserEditingQuestion(true)
+
+    setValue('new-question', question.question)
+  }
+
+  const handleSaveQuestion = (questionId: string) => {
+    const updatedQuestions = questions.map(question => {
+      if (question.id === questionId) {
+        return {
+          id: question.id,
+          question: getValues('new-question')
+        }
+      }
+
+      return question
+    })
+
+    nookies.set(undefined, 'questions', JSON.stringify(updatedQuestions))
+
+    setQuestions(updatedQuestions)
+
+    setIsUserEditingQuestion(false)
+    setQuestionBeingEdited({} as IQuestionsProps)
+  }
+  
   return (
     <Styles.Container>
       <Styles.Content>
-        <form onSubmit={handleSubmit(handleSubmitForm)}>
+        <form onSubmit={handleSubmit(handleCreateQuestion)}>
           <h1>Adicione suas perguntas aqui</h1>
 
           <div className="input-wrapper">
             <Input
               register={register}
-              name='question'
+              name='question' 
               label='Digite sua pergunta aqui'
             />
 
@@ -71,16 +109,50 @@ const EditQuestions = (): ReactElement => {
           )}
 
           {questions.map(question => (
-            <Styles.Question key={question.id}>
-              <p>{question.question}</p>
+            <Styles.Question
+              key={question.id}
+              isUserEditingQuestion={isUserEditingQuestion}
+              isQuestionBeignEdited={
+                isUserEditingQuestion
+                && (isUserEditingQuestion && questionBeingEdited.id === question.id)
+              }
+            >
+              {isUserEditingQuestion && (isUserEditingQuestion && questionBeingEdited.id === question.id) ? (
+                <EditableInput
+                  register={register}
+                  name='new-question'
+                />
+              ) : (
+                <p>{question.question}</p>
+              )}
 
               <div className="actions">
-                <div className="action">
-                  <FiEdit2 size={18} />
-                </div>
-                <div className="action delete">
-                  <FiTrash size={18} />
-                </div>
+                {isUserEditingQuestion && (isUserEditingQuestion && questionBeingEdited.id === question.id) ? (
+                    <div
+                    role='button'
+                    className="action success"
+                    onClick={() => handleSaveQuestion(question.id)}
+                  >
+                    <FiCheck size={18} />
+                  </div>
+                ) : (
+                  <>
+                    <div
+                      role='button'
+                      className="action"
+                      onClick={() => handleEditQuestion(question)}
+                    >
+                      <FiEdit2 size={18} />
+                    </div>
+                    <div
+                      role='button'
+                      className="action delete"
+                      onClick={() => handleDeleteQuestion(question.id)}
+                    >
+                      <FiTrash size={18} />
+                    </div>
+                  </>
+                )}
               </div>
             </Styles.Question>
           ))}
