@@ -14,16 +14,11 @@ const Home: NextPage = () => {
 
   return (
     <Styles.Container>
-      <Link href='/edit-questions'>Create</Link>
     </Styles.Container>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = nookies.get(ctx)
-
-  console.log(cookies)
-
   return {
     props: {}
   }

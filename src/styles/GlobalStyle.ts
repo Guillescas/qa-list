@@ -15,7 +15,6 @@ export default createGlobalStyle`
     }
 
     ::-webkit-scrollbar-thumb {
-      /* background-color: var(--scroll); */
       border-radius: 3px;
       cursor: move;
     }
@@ -33,7 +32,6 @@ export default createGlobalStyle`
     background: ${({ theme }) => theme.colors.background};
     font-family: 'Ubuntu', sans-serif;
     color: ${({ theme }) => theme.colors.text};
-    overflow-x: hidden;
 
     transition: background 0.2s;
   }
