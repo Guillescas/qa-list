@@ -1,4 +1,4 @@
-import { lighten } from 'polished';
+import { darken, lighten } from 'polished';
 import styled from 'styled-components';
 
 interface IQuestionProps {
@@ -37,6 +37,7 @@ export const Content = styled.div`
         height: 47px;
 
         margin-left: 1rem;
+        margin-bottom: calc(18px + 0.5rem);
       }
     }
   }
@@ -46,6 +47,8 @@ export const Questions = styled.div`
   width: 100%;
 
   margin-top: 3rem;
+
+  transition: all 0.2s;
 
   p {
     margin: 2rem 0;
@@ -65,6 +68,7 @@ export const Question = styled.div<IQuestionProps>`
     ? theme.colors.disabled
     : theme.colors.white
   };
+  transition: background-color 0.2s;
 
   height: 100%;
   min-height: 47px;
@@ -109,13 +113,16 @@ export const Question = styled.div<IQuestionProps>`
     align-items: center;
     justify-content: center;
 
-    .action {
+    button {
       display: flex;
       align-items: center;
       justify-content: center;
 
       margin: 0 0.25rem;
       cursor: pointer;
+
+      border: none;
+      background: none;
 
       padding: 0.5rem;
 
@@ -126,17 +133,22 @@ export const Question = styled.div<IQuestionProps>`
       &:hover {
         background-color: ${({ theme }) => theme.colors.background};
 
-        &.delete {
+        &.delete ,
+        &.cancel {
           color: ${({ theme }) => theme.colors.error};
         }
 
         &.success {
-          color: ${({ theme }) => theme.colors.success};
+          color: ${({ theme }) => darken(0.2, theme.colors.success)};
         }
       }
 
       &:last-child {
         margin-right: 0;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
       }
     }
   }

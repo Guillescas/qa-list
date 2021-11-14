@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react';
 import Input from '../components/Input/';
 import { useForm } from 'react-hook-form'
 import nookies from 'nookies'
-import { FiTrash, FiEdit2, FiCheck } from 'react-icons/fi'
+import { FiTrash, FiEdit2, FiCheck, FiX } from 'react-icons/fi'
 import { v4 as uuidv4 } from 'uuid';
 
 import Button from '../components/Button';
@@ -10,9 +10,12 @@ import EditableInput from '../components/EditableInput';
 
 import * as Styles from '../styles/Pages/EditQuestions'
 
-interface IQuestionsProps {
+export type ConditionType = 'CHECKED' | 'NOT-CHECKED' | 'EMPTY'
+
+export interface IQuestionsProps {
   id: string
   question: string
+  condition: ConditionType
 }
 
 const EditQuestions = (): ReactElement => {
@@ -28,17 +31,33 @@ const EditQuestions = (): ReactElement => {
     return []
   })
 
-  const { register, handleSubmit, getValues, reset, setValue } = useForm()
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    reset,
+    setValue,
+    setError,
+    formState: { errors }
+  } = useForm()
 
   const handleCreateQuestion = () => {
     const newQuestion = getValues('question')
 
+    if (!newQuestion) {
+      return setError('question', {
+        type: 'manual',
+        message: 'Por favor, insira uma pergunta'
+      })
+    }
+
     const updatedQuestions = [
-      ...questions,
       {
         id: uuidv4(),
-        question: newQuestion
-      }
+        question: newQuestion,
+        condition: 'EMPTY' as ConditionType,
+      },
+      ...questions,
     ]
     
     nookies.set(undefined, 'questions', JSON.stringify(updatedQuestions), {
@@ -69,7 +88,8 @@ const EditQuestions = (): ReactElement => {
       if (question.id === questionId) {
         return {
           id: question.id,
-          question: getValues('new-question')
+          question: getValues('new-question'),
+          condition: question.condition,
         }
       }
 
@@ -83,6 +103,13 @@ const EditQuestions = (): ReactElement => {
     setIsUserEditingQuestion(false)
     setQuestionBeingEdited({} as IQuestionsProps)
   }
+
+  const handleCalcelEditingQuestion = () => {
+    setIsUserEditingQuestion(false)
+    setQuestionBeingEdited({} as IQuestionsProps)
+
+    reset()
+  }
   
   return (
     <Styles.Container>
@@ -95,6 +122,7 @@ const EditQuestions = (): ReactElement => {
               register={register}
               name='question' 
               label='Digite sua pergunta aqui'
+              error={errors.question && errors.question}
             />
 
             <Button title='Adicionar' type='submit' />
@@ -121,6 +149,12 @@ const EditQuestions = (): ReactElement => {
                 <EditableInput
                   register={register}
                   name='new-question'
+                  onSubmit={() => handleSaveQuestion(question.id)}
+                  onKeyPress={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSaveQuestion(question.id)
+                    }
+                  }}
                 />
               ) : (
                 <p>{question.question}</p>
@@ -128,29 +162,43 @@ const EditQuestions = (): ReactElement => {
 
               <div className="actions">
                 {isUserEditingQuestion && (isUserEditingQuestion && questionBeingEdited.id === question.id) ? (
-                    <div
-                    role='button'
-                    className="action success"
-                    onClick={() => handleSaveQuestion(question.id)}
-                  >
-                    <FiCheck size={18} />
-                  </div>
+                  <>
+                    <button
+                      title='Salvar'
+                      role='button'
+                      className="success"
+                      onClick={() => handleSaveQuestion(question.id)}
+                    >
+                      <FiCheck size={18} />
+                    </button>
+                    <button
+                      title='Cancelar'
+                      role='button'
+                      className="cancel"
+                      onClick={() => handleCalcelEditingQuestion()}
+                    >
+                      <FiX size={18} />
+                    </button>
+                  </>
                 ) : (
                   <>
-                    <div
+                    <button
+                      title='Editar'
+                      disabled={isUserEditingQuestion}
                       role='button'
-                      className="action"
                       onClick={() => handleEditQuestion(question)}
                     >
                       <FiEdit2 size={18} />
-                    </div>
-                    <div
+                    </button>
+                    <button
+                      title='Deletar'
+                      disabled={isUserEditingQuestion}
                       role='button'
-                      className="action delete"
+                      className="delete"
                       onClick={() => handleDeleteQuestion(question.id)}
                     >
                       <FiTrash size={18} />
-                    </div>
+                    </button>
                   </>
                 )}
               </div>

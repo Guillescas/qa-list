@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+interface IContainerProps {
+  error?: boolean
+}
+
+export const Container = styled.div<IContainerProps>`
   display: flex;
   flex-direction: column;
 
@@ -17,5 +21,12 @@ export const Container = styled.div`
     padding: 1rem;
 
     border-radius: 0.5rem;
+  }
+
+  .error {
+    margin-top: 0.5rem;
+    height: 18px;
+
+    color: ${({ theme }) => theme.colors.error};
   }
 `;
