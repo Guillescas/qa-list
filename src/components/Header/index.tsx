@@ -6,7 +6,7 @@ import * as Styles from './styles';
 const Header = (): ReactElement => {
   return (
     <Styles.Container>
-      <h1>Trabzera</h1>
+      <h1>Checklist</h1>
 
       <div className="options">
         <Link href='/'>

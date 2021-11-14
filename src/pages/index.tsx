@@ -58,7 +58,7 @@ const Home: NextPage = () => {
   return (
     <Styles.Container>
       <Styles.Content>
-        <h1>Checklist</h1>
+        <h1>Questões</h1>
 
         {questions.map(question => (
           <Styles.Question key={question.id} condition={question.condition}>
