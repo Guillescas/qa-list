@@ -60,6 +60,10 @@ const Home: NextPage = () => {
       <Styles.Content>
         <h1>Questões</h1>
 
+        {questions.length === 0 && (
+          <p className='without-questions'>Vá para a aba de "Questões" para cadastrar questões</p>
+        )}
+
         {questions.map(question => (
           <Styles.Question key={question.id} condition={question.condition}>
             <p>{question.question}</p>

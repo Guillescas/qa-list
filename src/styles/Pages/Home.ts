@@ -22,6 +22,11 @@ export const Content = styled.div`
   margin: 3rem auto 0;
 
   padding: 0 1rem 3rem;
+
+  .without-questions {
+    margin: 2rem 0;
+    text-align: center;
+  }
 `;
 
 export const Question = styled.div<IQuestionProps>`
