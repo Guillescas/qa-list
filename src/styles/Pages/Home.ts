@@ -99,6 +99,10 @@ export const Question = styled.div<IQuestionProps>`
 
       border-radius: 0.5rem;
 
+      @media (max-width: 500px) {
+        padding: 0.15rem;
+      }
+
       &:hover {
         background-color: ${({ theme }) => theme.colors.background};
 
@@ -145,7 +149,6 @@ export const Percent = styled.div`
     position: relative;
 
     .percent-bar {
-
       background: ${({ theme }) => theme.colors.success};
       height: 24px;
 
