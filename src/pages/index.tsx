@@ -86,30 +86,32 @@ const Home: NextPage = () => {
           <p className='without-questions'>Vá para a aba de "Questões" para cadastrar questões</p>
         )}
 
-        {questions.map(question => (
-          <Styles.Question key={question.id} condition={question.condition}>
-            <p>{question.question}</p>
+        <Styles.Questions>
+          {questions.map(question => (
+            <Styles.Question key={question.id} condition={question.condition}>
+              <p>{question.question}</p>
 
-            <div className="actions">
-              <button
-                title='Marcar'
-                role='button'
-                className="success"
-                onClick={() => handleCheckItem(question.id)}
-              >
-                <FiCheck size={18} />
-              </button>
-              <button
-                title='Desmarcar'
-                role='button'
-                className="cancel"
-                onClick={() => handleUncheckItem(question.id)}
-              >
-                <FiX size={18} />
-              </button>
-            </div>
-          </Styles.Question>
-        ))}
+              <div className="actions">
+                <button
+                  title='Marcar'
+                  role='button'
+                  className="success"
+                  onClick={() => handleCheckItem(question.id)}
+                >
+                  <FiCheck size={18} />
+                </button>
+                <button
+                  title='Desmarcar'
+                  role='button'
+                  className="cancel"
+                  onClick={() => handleUncheckItem(question.id)}
+                >
+                  <FiX size={18} />
+                </button>
+              </div>
+            </Styles.Question>
+          ))}
+        </Styles.Questions>
 
         <Styles.Percent>
           <h3>Aceitação</h3>

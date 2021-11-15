@@ -29,6 +29,10 @@ export const Content = styled.div`
   }
 `;
 
+export const Questions = styled.div`
+  width: 100%;
+`;
+
 export const Question = styled.div<IQuestionProps>`
   background: ${({ theme, condition }) =>
     condition === 'CHECKED'
