@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { GetServerSideProps, NextPage } from 'next'
 import nookies from 'nookies'
 import { FiCheck, FiX } from 'react-icons/fi'
@@ -8,11 +8,29 @@ import { ConditionType, IQuestionsProps } from './edit-questions'
 import * as Styles from '../styles/Pages/Home'
 
 const Home: NextPage = () => {
+  const [percent, setPercent] = useState(0)
+
+  const getPercentOfCheckedQuestions = (questions: IQuestionsProps[]) => {
+    const totalOfCheckedQuestions = questions.reduce((prev, currentQuestion) => {
+      if (currentQuestion.condition === 'CHECKED') {
+        return prev + 1
+      }
+
+      return prev
+    }, 0)
+
+    setPercent((totalOfCheckedQuestions * 100) / questions.length)
+  }
+
   const [questions, setQuestions] = useState<IQuestionsProps[]>(() => {
     const { questions: questionsFromCookies } = nookies.get()
 
+    const parsedQuestionsFromCookies = JSON.parse(questionsFromCookies)
+
+    getPercentOfCheckedQuestions(parsedQuestionsFromCookies)
+
     if (questionsFromCookies) {
-      return JSON.parse(questionsFromCookies)
+      return parsedQuestionsFromCookies
     }
 
     return []
@@ -54,6 +72,9 @@ const Home: NextPage = () => {
     setQuestions(updatedQuestions)
   }
 
+  useEffect(() => {
+    getPercentOfCheckedQuestions(questions)
+  }, [questions])
 
   return (
     <Styles.Container>
@@ -88,6 +109,16 @@ const Home: NextPage = () => {
             </div>
           </Styles.Question>
         ))}
+
+        <Styles.Percent>
+          <h3>Aceitação</h3>
+
+          <div className="percent-wrapper">
+            <div className="percent-bar" style={{ width: `${percent}%` }}>
+              <p className="percent">{percent.toFixed(0)}%</p>
+            </div>
+          </div>
+        </Styles.Percent>
       </Styles.Content>
     </Styles.Container>
   )

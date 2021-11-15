@@ -122,3 +122,52 @@ export const Question = styled.div<IQuestionProps>`
     }
   }
 `;
+
+export const Percent = styled.div`
+  margin: 4rem 0 2rem;
+
+  .percent-wrapper {
+    background: ${({ theme }) => theme.colors.white};
+    transition: background-color 0.2s;
+
+    height: 100%;
+    min-height: 24px;
+    max-height: 180px;
+
+    border-radius: 0.5rem;
+
+    margin: 1rem 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    position: relative;
+
+    .percent-bar {
+
+      background: ${({ theme }) => theme.colors.success};
+      height: 24px;
+
+      border-radius: 0.5rem;
+
+      transition: width 0.1s ease-in;
+    }
+
+    .percent {
+      width: 48px;
+      height: 24px;
+
+      position: absolute;
+      right: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      text-align: right;
+
+      margin-right: 0.5rem;
+    }
+  }
+`
