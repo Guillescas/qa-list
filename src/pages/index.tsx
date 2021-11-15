@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { GetServerSideProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 import nookies from 'nookies'
 import { FiCheck, FiX } from 'react-icons/fi'
 
@@ -122,12 +122,6 @@ const Home: NextPage = () => {
       </Styles.Content>
     </Styles.Container>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return {
-    props: {}
-  }
 }
 
 export default Home
