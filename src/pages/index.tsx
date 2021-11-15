@@ -25,11 +25,12 @@ const Home: NextPage = () => {
   const [questions, setQuestions] = useState<IQuestionsProps[]>(() => {
     const { questions: questionsFromCookies } = nookies.get()
 
-    const parsedQuestionsFromCookies = JSON.parse(questionsFromCookies)
-
-    getPercentOfCheckedQuestions(parsedQuestionsFromCookies)
-
+    
     if (questionsFromCookies) {
+      const parsedQuestionsFromCookies = JSON.parse(questionsFromCookies)
+  
+      getPercentOfCheckedQuestions(parsedQuestionsFromCookies)
+
       return parsedQuestionsFromCookies
     }
 
@@ -115,7 +116,9 @@ const Home: NextPage = () => {
 
           <div className="percent-wrapper">
             <div className="percent-bar" style={{ width: `${percent}%` }}>
-              <p className="percent">{percent.toFixed(0)}%</p>
+              <p className="percent">
+                {percent ? percent.toFixed(0) : 0}%
+              </p>
             </div>
           </div>
         </Styles.Percent>
