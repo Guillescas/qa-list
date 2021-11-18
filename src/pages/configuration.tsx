@@ -9,6 +9,7 @@ import Button from '../components/Button';
 import EditableInput from '../components/EditableInput';
 
 import * as Styles from '../styles/Pages/Configuration'
+import { toast } from 'react-toastify';
 
 export type ConditionType = 'CHECKED' | 'NOT-CHECKED' | 'EMPTY'
 
@@ -147,6 +148,8 @@ const Configuration = (): ReactElement => {
     nookies.set(undefined, 'acceptancePercentage', JSON.stringify(percentage))
     setAcceptancePercentage(percentage)
     setValue2('acceptancePercentage', percentage)
+
+    toast.success('Valor atualizado com sucesso')
   }
   
   return (
