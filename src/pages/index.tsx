@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       return prev
     }, 0)
 
-    setPercent((totalOfCheckedQuestions * 100) / questions.length)
+    setPercent((totalOfCheckedQuestions * 100) / questions.length || 0)
   }
 
   const [questions, setQuestions] = useState<IQuestionsProps[]>(() => {
@@ -127,17 +127,18 @@ const Home: NextPage = () => {
           ))}
         </Styles.Questions>
 
-        <Styles.Percent success={percent >= acceptancePercentage}>
+        <Styles.Percent success={percent !== 0 || acceptancePercentage !== 0 && percent >= acceptancePercentage}>
           <div className="percent-header">
             <h3>Aceitação</h3>
 
-            <p>
-              {
-                percent >= acceptancePercentage
-                ? 'Porcentagem de questões concluídas maior que a porcentagem de aceite'
-                : 'Porcentagem de questões concluídas menor que a porcentagem de aceite'
-              }
-            </p>
+            {(percent !== 0 && acceptancePercentage !== 0) && (
+              <p>
+                {percent > acceptancePercentage
+                  ? 'Porcentagem de questões concluídas maior que a porcentagem de aceite'
+                  : 'Porcentagem de questões concluídas menor que a porcentagem de aceite'
+                }
+              </p>
+            )} 
           </div>
 
           <div className="percent-wrapper">
@@ -152,11 +153,11 @@ const Home: NextPage = () => {
           <div className="subtitle">
             <div className="square-wrapper">
               <div className="square success" />
-              <p>Questões aceitas: <strong>{percent}%</strong></p>
+              <p>Questões aceitas: <strong>{percent ? percent : 0}%</strong></p>
             </div>
             <div className="square-wrapper">
               <div className="square secondary" />
-              <p>Porcentagem mínima de aceite: <strong>{acceptancePercentage}%</strong></p>
+              <p>Porcentagem mínima de aceite: <strong>{acceptancePercentage ? acceptancePercentage : 0}%</strong></p>
             </div>
           </div>
         </Styles.Percent>

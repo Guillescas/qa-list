@@ -45,6 +45,7 @@ const Configuration = (): ReactElement => {
     register: register2,
     handleSubmit: handleSubmit2,
     getValues: getValues2,
+    watch: watch2,
     setValue: setValue2,
     setError: setError2,
     formState: { errors: errors2 }
@@ -257,7 +258,11 @@ const Configuration = (): ReactElement => {
               step="1"
             />
 
-            <Button title='Salvar' type='submit' />
+            <Button
+              title='Salvar'
+              type='submit'
+              disabled={acceptancePercentage === Number(watch2('acceptancePercentage'))}
+            />
           </form>
         </Styles.AcceptancePercentage>
       </Styles.Content>
