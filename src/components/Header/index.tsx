@@ -12,8 +12,8 @@ const Header = (): ReactElement => {
         <Link href='/'>
           <a>Home</a>
         </Link>
-        <Link href='/edit-questions'>
-          <a>Questões</a>
+        <Link href='/configuration'>
+          <a>Configurações</a>
         </Link>
       </div>
     </Styles.Container>

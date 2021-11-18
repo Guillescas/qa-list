@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 import { darken, lighten } from 'polished';
 
-import { ConditionType } from '../../pages/edit-questions';
+import { ConditionType } from '../../pages/configuration';
 
 interface IQuestionProps {
   condition: ConditionType
+}
+
+interface IPercentProps {
+  success: boolean
 }
 
 export const Container = styled.div`
@@ -131,8 +135,22 @@ export const Question = styled.div<IQuestionProps>`
   }
 `;
 
-export const Percent = styled.div`
+export const Percent = styled.div<IPercentProps>`
   margin: 4rem 0 2rem;
+
+  .percent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    p {
+      color: ${({ theme, success }) =>
+        success
+        ? darken(0.3, theme.colors.success)
+        : theme.colors.error
+      };
+    }
+  }
 
   .percent-wrapper {
     background: ${({ theme }) => theme.colors.white};
@@ -152,13 +170,28 @@ export const Percent = styled.div`
     
     position: relative;
 
-    .percent-bar {
-      background: ${({ theme }) => theme.colors.success};
-      height: 24px;
-
-      border-radius: 0.5rem;
-
+    .percent-bar,
+    .acceptance-percentage {
+      height: 12px;
       transition: width 0.1s ease-in;
+    }
+
+    .percent-bar {
+      position: absolute;
+      bottom: 0;
+
+      background: ${({ theme }) => theme.colors.success};
+
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    .acceptance-percentage {
+      position: absolute;
+      top: 0;
+
+      background: ${({ theme }) => theme.colors.secondary};
+
+      border-radius: 0.5rem 0.5rem 0 0;
     }
 
     .percent {
@@ -175,6 +208,30 @@ export const Percent = styled.div`
       text-align: right;
 
       margin-right: 0.5rem;
+    }
+  }
+
+  .subtitle {
+    .square-wrapper {
+      display: flex;
+      align-items: center;
+
+      margin-top: 0.5rem;
+
+      .square {
+        width: 24px;
+        height: 24px;
+
+        margin-right: 1rem;
+        border-radius: 6px;
+
+        &.success {
+          background: ${({ theme }) => theme.colors.success};
+        }
+        &.secondary {
+          background: ${({ theme }) => theme.colors.secondary};
+        }
+      }
     }
   }
 `

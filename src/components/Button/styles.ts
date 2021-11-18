@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { lighten } from 'polished'
+import { darken, lighten } from 'polished'
 
 interface IContainerProps {
   background?: string
@@ -29,5 +29,18 @@ export const Container = styled.button<IContainerProps>`
     background: ${({ theme, background }) =>
       background ? lighten(0.1, background) : lighten(0.1, theme.colors.primary)
     };
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: ${({ theme, background }) =>
+      background ? darken(0.1, background) : darken(0.1, theme.colors.primary)
+    };
+
+    &:hover {
+      background: ${({ theme, background }) =>
+        background ? darken(0.1, background) : darken(0.1, theme.colors.primary)
+      };
+    }
   }
 `;

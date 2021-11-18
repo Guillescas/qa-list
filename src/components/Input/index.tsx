@@ -4,7 +4,7 @@ import * as Styles from './styles';
 
 interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
-  label: string
+  label?: string
   register: any
   error?: string
 }
@@ -18,8 +18,8 @@ const Input = ({
 }: IInputProps): ReactElement => {
   return (
     <Styles.Container error={!!error}>
-      <label htmlFor={name}>{label}</label>
-      <input type='text' {...rest} name={name} {...register(name)} />
+      {label && <label htmlFor={name}>{label}</label>}
+      <input type='text' name={name} {...register(name)} {...rest} />
       <div className="error">
        {error && <p>Campo vazio</p>}
       </div>

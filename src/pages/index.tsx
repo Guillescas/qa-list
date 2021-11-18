@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import nookies from 'nookies'
 import { FiCheck, FiX } from 'react-icons/fi'
 
-import { ConditionType, IQuestionsProps } from './edit-questions'
+import { ConditionType, IQuestionsProps } from './configuration'
 
 import * as Styles from '../styles/Pages/Home'
 
@@ -35,6 +35,17 @@ const Home: NextPage = () => {
     }
 
     return []
+  })
+  const [acceptancePercentage, setAcceptancePercentage] = useState(() => {
+    const { acceptancePercentage: acceptancePercentageFromCookies } = nookies.get()
+
+    if (acceptancePercentageFromCookies) {
+      const parsedAcceptancePercentage = Number(JSON.parse(acceptancePercentageFromCookies))
+
+      return parsedAcceptancePercentage
+    }
+
+    return 0
   })
 
   const handleCheckItem = (questionId: string) => {
@@ -83,7 +94,10 @@ const Home: NextPage = () => {
         <h1>Questões</h1>
 
         {questions.length === 0 && (
-          <p className='without-questions'>Vá para a aba de "Questões" para cadastrar questões</p>
+          <p className='without-questions'>
+            Vá para a página de "Configurações" para adicionar questões
+            e configurar a porcentagem de aceite
+          </p>
         )}
 
         <Styles.Questions>
@@ -113,14 +127,36 @@ const Home: NextPage = () => {
           ))}
         </Styles.Questions>
 
-        <Styles.Percent>
-          <h3>Aceitação</h3>
+        <Styles.Percent success={percent >= acceptancePercentage}>
+          <div className="percent-header">
+            <h3>Aceitação</h3>
+
+            <p>
+              {
+                percent >= acceptancePercentage
+                ? 'Porcentagem de questões concluídas maior que a porcentagem de aceite'
+                : 'Porcentagem de questões concluídas menor que a porcentagem de aceite'
+              }
+            </p>
+          </div>
 
           <div className="percent-wrapper">
-            <div className="percent-bar" style={{ width: `${percent}%` }}>
-              <p className="percent">
-                {percent ? percent.toFixed(0) : 0}%
-              </p>
+            <div className="percent-bar" style={{ width: `${percent}%` }} />
+
+            <div
+              className="acceptance-percentage"
+              style={{ width: `${acceptancePercentage}%` }} 
+            />
+          </div>
+
+          <div className="subtitle">
+            <div className="square-wrapper">
+              <div className="square success" />
+              <p>Questões aceitas: <strong>{percent}%</strong></p>
+            </div>
+            <div className="square-wrapper">
+              <div className="square secondary" />
+              <p>Porcentagem mínima de aceite: <strong>{acceptancePercentage}%</strong></p>
             </div>
           </div>
         </Styles.Percent>

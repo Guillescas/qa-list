@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Button from '../components/Button';
 import EditableInput from '../components/EditableInput';
 
-import * as Styles from '../styles/Pages/EditQuestions'
+import * as Styles from '../styles/Pages/Configuration'
 
 export type ConditionType = 'CHECKED' | 'NOT-CHECKED' | 'EMPTY'
 
@@ -18,7 +18,7 @@ export interface IQuestionsProps {
   condition: ConditionType
 }
 
-const EditQuestions = (): ReactElement => {
+const Configuration = (): ReactElement => {
   const [isUserEditingQuestion, setIsUserEditingQuestion] = useState(false)
   const [questionBeingEdited, setQuestionBeingEdited] = useState<IQuestionsProps>({} as IQuestionsProps)
   const [questions, setQuestions] = useState<IQuestionsProps[]>(() => {
@@ -40,6 +40,28 @@ const EditQuestions = (): ReactElement => {
     setError,
     formState: { errors }
   } = useForm()
+
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    getValues: getValues2,
+    setValue: setValue2,
+    setError: setError2,
+    formState: { errors: errors2 }
+  } = useForm()
+
+  const [acceptancePercentage, setAcceptancePercentage] = useState(() => {
+    const { acceptancePercentage: acceptancePercentageFromCookies } = nookies.get()
+
+    if (acceptancePercentageFromCookies) {
+      const parsedAcceptancePercentage = Number(JSON.parse(acceptancePercentageFromCookies))
+      setValue2('acceptancePercentage', parsedAcceptancePercentage)
+
+      return parsedAcceptancePercentage
+    }
+
+    return 0
+  })
 
   const handleCreateQuestion = () => {
     const newQuestion = getValues('question')
@@ -110,12 +132,27 @@ const EditQuestions = (): ReactElement => {
 
     reset()
   }
+
+  const handleSetAcceptancePercentage = () => {
+    const percentage = getValues2('acceptancePercentage')
+
+    if (percentage > 100 || percentage < 0) {
+      setError2('acceptancePercentage', {
+        type: 'manual',
+        message: 'Valor inválido. Insira um valor entre 0 e 100'
+      })
+    }
+
+    nookies.set(undefined, 'acceptancePercentage', JSON.stringify(percentage))
+    setAcceptancePercentage(percentage)
+    setValue2('acceptancePercentage', percentage)
+  }
   
   return (
     <Styles.Container>
       <Styles.Content>
         <form onSubmit={handleSubmit(handleCreateQuestion)}>
-          <h1>Adicione suas perguntas aqui</h1>
+          <h1>Perguntas</h1>
 
           <div className="input-wrapper">
             <Input
@@ -130,10 +167,8 @@ const EditQuestions = (): ReactElement => {
         </form>
 
         <Styles.Questions>
-          <h2>Perguntas já registradas:</h2>
-
           {questions.length === 0 && (
-            <p>Ops, parece que não existem perguntas cadastradas :(</p>
+            <p>Oops, parece que não existem perguntas registradas :(</p>
           )}
 
           {questions.map(question => (
@@ -205,10 +240,29 @@ const EditQuestions = (): ReactElement => {
             </Styles.Question>
           ))}
         </Styles.Questions>
-      </Styles.Content>
 
+        <Styles.AcceptancePercentage>
+          <h1>Definir porcentagem de aceitação</h1>
+
+          <form onSubmit={handleSubmit2(handleSetAcceptancePercentage)}>
+            <p>Qual a porcentagem mínima de itens completos?</p>
+
+            <Input
+              register={register2}
+              name='acceptancePercentage'
+              error={errors2.acceptancePercentage && errors2.acceptancePercentage}
+              type='number'
+              min='0'
+              max='100'
+              step="1"
+            />
+
+            <Button title='Salvar' type='submit' />
+          </form>
+        </Styles.AcceptancePercentage>
+      </Styles.Content>
     </Styles.Container>
   );
 };
 
-export default EditQuestions
+export default Configuration

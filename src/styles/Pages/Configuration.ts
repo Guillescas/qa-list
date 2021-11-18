@@ -1,4 +1,4 @@
-import { darken, lighten } from 'polished';
+import { darken } from 'polished';
 import styled from 'styled-components';
 
 interface IQuestionProps {
@@ -46,7 +46,7 @@ export const Content = styled.div`
 export const Questions = styled.div`
   width: 100%;
 
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 
   transition: all 0.2s;
 
@@ -153,3 +153,27 @@ export const Question = styled.div<IQuestionProps>`
     }
   }
 `;
+
+export const AcceptancePercentage = styled.div`
+  margin: 8rem 0;
+
+  > form {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    margin-top: 2rem;
+
+    p {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    button {
+      max-width: 150px;
+      height: 47px;
+
+      margin-left: 1rem;
+    }
+  }
+`
